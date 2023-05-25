@@ -1,64 +1,65 @@
+//native Imports
 import React from 'react';
-import { Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
+import {View} from 'react-native';
+//hooks
 import usePassword from '../../hooks/usePassword';
-import Icon from 'react-native-vector-icons/Ionicons';
+//components
+import LogoAuthComponent from '../../components/authComponent/LogoAuthComponent';
+import InputAuthComponent from '../../components/authComponent/InputAuthComponent';
+import ButtonAuthComponent from '../../components/authComponent/ButtonAuthComponent';
 
+const url:string = 'https://images.emojiterra.com/google/android-pie/512px/2695.png';
 
 const RegisterScreen = () => {
 
-    const {hidePassword,hidePasswordIcon,showPassword} = usePassword();
+    const {hidePassword,hidePasswordIcon,showPassword,hideReafirmPassword,showReafirmPassword,hideReafirmPasswordIcon} = usePassword();
 
   return (
-    <View className='flex-1 bg-slate-200 justify-center items-center'>
-        <View className='h-5/6 w-full'>
-            <View className='items-center'>
-                <Image
-                    source={{uri:'https://images.emojiterra.com/google/android-pie/512px/2695.png'}}
-                    className="w-24 h-24 "
+    <View className="flex-1 bg-slate-200 justify-center items-center">
+        <View className="h-5/6 w-full">
+
+            <LogoAuthComponent urlImage={url} institutionName="Name of Institution"/>
+
+            <View className="mt-2 items-center ">
+                <InputAuthComponent
+                    icon={{color:'#999999',firstIcon:'person-outline',size:15}}
+                    placeholder="Nombre"
                 />
-                <Text className='text-3xl mt-8'>Name of Institution</Text>
+                <InputAuthComponent
+                    icon={{color:'#999999',firstIcon:'person-outline',size:15}}
+                    placeholder="Apellido"
+                />
+                <InputAuthComponent
+                    icon={{color:'#999999',firstIcon:'at-outline',size:15}}
+                    placeholder="Correo"
+                />
+                <InputAuthComponent
+                    icon={{color:'#999999',firstIcon:'lock-closed-outline',size:15,secondIcon:`${hidePasswordIcon}`}}
+                    placeholder="Contraseña"
+                    hidePassword={hidePassword}
+                    showPassword={showPassword}
+                />
+                <InputAuthComponent
+                    icon={{color:'#999999',firstIcon:'checkmark-done-outline',size:15, secondIcon:`${hideReafirmPasswordIcon}`}}
+                    placeholder="Confirmar contraseña"
+                    hidePassword={hideReafirmPassword}
+                    showPassword={showReafirmPassword}
+                />
             </View>
-            <View className='mt-24 items-center '>
-                <View className='w-11/12 my-2 flex-row items-center justify-center   rounded-lg p-2' >
-                    {/* icono */}
-                    <View className='bg-white w-2/12 h-12 justify-center items-center rounded-l-xl'>
-                        <Icon name='at-outline' size={15} color='#999999' />
-                    </View>
-                    <View className='w-9/12 border-l-2 border-slate-200 '>
-                        <TextInput className='border-none rounded-r-xl bg-white pl-5 w-full ' placeholder='Correo'/>
-                    </View>
-                </View>
-                <View className='w-11/12 my-2 flex-row items-center justify-center   rounded-lg p-2' >
-                    {/* icono */}
-                    <View className='bg-white w-2/12 h-12 justify-center items-center rounded-l-xl'>
-                        <Icon name='at-outline' size={15} color='#999999' />
-                    </View>
-                    <View className='w-9/12 border-l-2 border-slate-200 '>
-                        <TextInput className='border-none rounded-r-xl bg-white pl-5 w-full ' placeholder='Correo'/>
-                    </View>
-                </View>
-                <View className='w-11/12 my-2 flex-row items-center justify-center   rounded-lg p-2'>
-                    <View className='bg-white w-2/12 h-12 justify-center items-center rounded-l-xl'>
-                        {/* icono */}
-                        <Icon name='lock-closed-outline' size={15} color='#999999'/>
-                    </View>
-                    <View className='w-7/12 border-l-2 border-slate-200'>
-                        <TextInput className='border-none  bg-white pl-5 w-full' placeholder='Contraseña' secureTextEntry = {hidePassword}  />
-                    </View>
-                    <TouchableOpacity className='bg-white h-12 w-2/12 items-center justify-center rounded-r-xl' onPress={showPassword}>
-                        <Icon name={hidePasswordIcon} size={17}  />
-                    </TouchableOpacity>
-                </View>
+
+            <View className="items-center mt-8">
+                <ButtonAuthComponent
+                    buttonName="Registrarse"
+                    textStyle="text-white"
+                    touchableStyle="border-2 border-blue-600 w-10/12 h-10 rounded-xl items-center justify-center bg-blue-500"
+                />
             </View>
-            <View className='items-center mt-8'>
-                <TouchableOpacity className='border-2 border-blue-600 w-10/12 h-10 rounded-xl items-center justify-center bg-blue-500'>
-                    <Text className='text-white'>Registrarse</Text>
-                </TouchableOpacity>
-            </View>
-            <View className='items-center  w-full  flex-1 flex-col justify-end'>
-                <TouchableOpacity >
-                    <Text className='text-blue-700 underline mt-5'>Iniciar Sesion</Text>
-                </TouchableOpacity>
+            <View className="items-center">
+                <ButtonAuthComponent
+                    buttonName="Iniciar Sesion"
+                    textStyle="text-blue-700 underline mt-5"
+                    touchableStyle=""
+                />
             </View>
         </View>
     </View>
