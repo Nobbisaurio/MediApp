@@ -1,14 +1,18 @@
+import 'react-native-gesture-handler';
 import React from 'react';
-import { View } from 'react-native';
-import LoginScreen from './src/screens/auth/LoginScreen';
-import RegisterScreen from './src/screens/auth/RegisterScreen';
+import { NavigationContainer } from '@react-navigation/native';
+// import LoginScreen from './src/screens/auth/LoginScreen';
+// import RegisterScreen from './src/screens/auth/RegisterScreen';
+import { AuthNavigation } from './src/navigation/auth/AuthNavigation';
 
 const App = () => {
   return (
-    <View className="flex-1" >
+    <NavigationContainer>
+
       {/* <LoginScreen /> */}
-      <RegisterScreen/>
-    </View>
+      {/* <RegisterScreen/> */}
+      <AuthNavigation />
+    </NavigationContainer>
   );
 };
 

@@ -7,10 +7,16 @@ import usePassword from '../../hooks/usePassword';
 import LogoAuthComponent from '../../components/authComponent/LogoAuthComponent';
 import InputAuthComponent from '../../components/authComponent/InputAuthComponent';
 import ButtonAuthComponent from '../../components/authComponent/ButtonAuthComponent';
+//navigation
+import { StackScreenProps } from '@react-navigation/stack';
+
+
+interface Props extends StackScreenProps<any,any>{}
 
 const url:string = 'https://images.emojiterra.com/google/android-pie/512px/2695.png';
 
-const RegisterScreen = () => {
+
+const RegisterScreen = ({navigation}:Props) => {
 
     const {hidePassword,hidePasswordIcon,showPassword,hideReafirmPassword,showReafirmPassword,hideReafirmPasswordIcon} = usePassword();
 
@@ -52,6 +58,8 @@ const RegisterScreen = () => {
                     buttonName="Registrarse"
                     textStyle="text-white"
                     touchableStyle="border-2 border-blue-600 w-10/12 h-10 rounded-xl items-center justify-center bg-blue-500"
+                    navigation={()=>navigation.navigate('LoginScreen')}
+
                 />
             </View>
             <View className="items-center">
@@ -59,6 +67,7 @@ const RegisterScreen = () => {
                     buttonName="Iniciar Sesion"
                     textStyle="text-blue-700 underline mt-5"
                     touchableStyle=""
+                    navigation={()=>navigation.navigate('LoginScreen')}
                 />
             </View>
         </View>
