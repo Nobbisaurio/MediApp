@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Image, View, Text } from 'react-native';
 
 
@@ -16,7 +16,7 @@ const AvatarMenu = ({urlImage, imageStyle, userName,componentStyle,textStyle,ima
   return (
     <View className={componentStyle}>
         <View className={imageContentStyle}>
-            <Image 
+            <Image
             className = {imageStyle}
             source={{uri: `${urlImage}`}}
             />
@@ -24,9 +24,9 @@ const AvatarMenu = ({urlImage, imageStyle, userName,componentStyle,textStyle,ima
         <View className={textContentStyle}>
             <Text className={textStyle}>{userName}</Text>
         </View>
-        
-    </View>
-  )
-}
 
-export default AvatarMenu
+    </View>
+  );
+};
+
+export default AvatarMenu;

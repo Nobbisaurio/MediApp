@@ -14,10 +14,11 @@ const Drawer = createDrawerNavigator();
 export const UserLateralMenu = () => {
   return (
     <Drawer.Navigator
-    drawerContent={ UserMenu}
+      screenOptions={{ headerStyle:{backgroundColor:"#64748b"},drawerStyle:{backgroundColor:'#e2e8f0'},headerTintColor:'white' }}
+      drawerContent={UserMenu}
     >
-      <Drawer.Screen  name="UserHomeScreen" component={UserHomeScreen} />
-      <Drawer.Screen  name="Charts" component={Charts} />
+      <Drawer.Screen name="Home" component={UserHomeScreen} />
+      <Drawer.Screen name="Estadisticas" component={Charts} />
       {/* <Drawer.Screen name="Article" component={Article} /> */}
     </Drawer.Navigator>
   );
@@ -28,7 +29,7 @@ export const UserLateralMenu = () => {
 const urlImage = 'https://alumni.engineering.utoronto.ca/files/2022/05/Avatar-Placeholder-400x400-1.jpg';
 
 
-const UserMenu = ({navigation}: DrawerContentComponentProps)=>{
+const UserMenu = ({ navigation }: DrawerContentComponentProps) => {
   return (
     <>
       <DrawerContentScrollView>
@@ -36,11 +37,12 @@ const UserMenu = ({navigation}: DrawerContentComponentProps)=>{
           <AvatarMenu
             urlImage={urlImage}
             userName="Nombre del usuario"
-            imageContentStyle="items-center mt-5"
-            imageStyle="w-28 h-28 rounded-full"
+            imageContentStyle="items-center mt-5 border-2 rounded-full "
+            imageStyle="w-28 h-28 rounded-full  "
             textContentStyle="my-5 "
             textStyle="text-3xl font-bold text-center"
-            />
+            componentStyle="items-center bg-slate-500 -top-1"
+          />
         </View>
         <View >
           <MenuOption
@@ -52,7 +54,7 @@ const UserMenu = ({navigation}: DrawerContentComponentProps)=>{
             optionContentStyle=" w-full "
             iconColor=''
             iconSize={25}
-            navigation={()=>navigation.navigate('UserHomeScreen')}
+            navigation={() => navigation.navigate('Home')}
           />
           <MenuOption
             componentStyle=" my-2 h-12 flex-row items-center mx-5 "
@@ -73,7 +75,7 @@ const UserMenu = ({navigation}: DrawerContentComponentProps)=>{
             optionContentStyle=" w-full "
             iconColor=''
             iconSize={25}
-            navigation={()=>navigation.navigate('Charts')}
+            navigation={() => navigation.navigate('Estadisticas')}
           />
           <MenuOption
             componentStyle=" my-2 h-12 flex-row items-center mx-5 "
@@ -94,7 +96,7 @@ const UserMenu = ({navigation}: DrawerContentComponentProps)=>{
             optionContentStyle=" w-full "
             iconColor=''
             iconSize={25}
-            navigation={()=>navigation.navigate('UserHomeScreen')}
+            navigation={() => navigation.navigate('UserHomeScreen')}
           />
         </View>
       </DrawerContentScrollView>

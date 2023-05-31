@@ -9,6 +9,7 @@ import InputAuthComponent from '../../components/authComponent/InputAuthComponen
 import ButtonAuthComponent from '../../components/authComponent/ButtonAuthComponent';
 //navigation
 import { StackScreenProps } from '@react-navigation/stack';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 interface Props extends StackScreenProps<any,any>{}
@@ -21,6 +22,8 @@ const RegisterScreen = ({navigation}:Props) => {
     const {hidePassword,hidePasswordIcon,showPassword,hideReafirmPassword,showReafirmPassword,hideReafirmPasswordIcon} = usePassword();
 
   return (
+    <ScrollView>
+
     <View className="flex-1 bg-slate-200 justify-center items-center">
         <View className="h-5/6 w-full">
 
@@ -30,27 +33,27 @@ const RegisterScreen = ({navigation}:Props) => {
                 <InputAuthComponent
                     icon={{color:'#999999',firstIcon:'person-outline',size:15}}
                     placeholder="Nombre"
-                />
+                    />
                 <InputAuthComponent
                     icon={{color:'#999999',firstIcon:'person-outline',size:15}}
                     placeholder="Apellido"
-                />
+                    />
                 <InputAuthComponent
                     icon={{color:'#999999',firstIcon:'at-outline',size:15}}
                     placeholder="Correo"
-                />
+                    />
                 <InputAuthComponent
                     icon={{color:'#999999',firstIcon:'lock-closed-outline',size:15,secondIcon:`${hidePasswordIcon}`}}
                     placeholder="Contraseña"
                     hidePassword={hidePassword}
                     showPassword={showPassword}
-                />
+                    />
                 <InputAuthComponent
                     icon={{color:'#999999',firstIcon:'checkmark-done-outline',size:15, secondIcon:`${hideReafirmPasswordIcon}`}}
                     placeholder="Confirmar contraseña"
                     hidePassword={hideReafirmPassword}
                     showPassword={showReafirmPassword}
-                />
+                    />
             </View>
 
             <View className="items-center mt-8">
@@ -60,7 +63,7 @@ const RegisterScreen = ({navigation}:Props) => {
                     touchableStyle="border-2 border-blue-600 w-10/12 h-10 rounded-xl items-center justify-center bg-blue-500"
                     navigation={()=>navigation.navigate('LoginScreen')}
 
-                />
+                    />
             </View>
             <View className="items-center">
                 <ButtonAuthComponent
@@ -68,10 +71,11 @@ const RegisterScreen = ({navigation}:Props) => {
                     textStyle="text-blue-700 underline mt-5"
                     touchableStyle=""
                     navigation={()=>navigation.navigate('LoginScreen')}
-                />
+                    />
             </View>
         </View>
     </View>
+    </ScrollView>
   );
 };
 
