@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerContentComponentProps } from '@react-navigation/drawer';
 import UserHomeScreen from '../../screens/user/UserHomeScreen';
 import { View } from 'react-native';
@@ -6,6 +6,12 @@ import AvatarMenu from '../../components/lateralMenu/AvatarMenu';
 import MenuOption from '../../components/lateralMenu/MenuOption';
 import Logout from '../../components/lateralMenu/Logout';
 import Charts from '../../screens/user/Charts';
+import AgendarCitaScreen from '../../screens/user/AgendarCitaScreen';
+import Modal from "react-native-modal";
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import ModallateralMenu from '../../components/lateralMenu/ModalLateralMenu';
+
+
 
 
 const Drawer = createDrawerNavigator();
@@ -14,11 +20,12 @@ const Drawer = createDrawerNavigator();
 export const UserLateralMenu = () => {
   return (
     <Drawer.Navigator
-      screenOptions={{ headerStyle:{backgroundColor:"#64748b"},drawerStyle:{backgroundColor:'#e2e8f0'},headerTintColor:'white' }}
+      screenOptions={{ headerStyle: { backgroundColor: "#64748b" }, drawerStyle: { backgroundColor: '#e2e8f0' }, headerTintColor: 'white' }}
       drawerContent={UserMenu}
     >
       <Drawer.Screen name="Home" component={UserHomeScreen} />
       <Drawer.Screen name="Estadisticas" component={Charts} />
+      <Drawer.Screen name="AgendarCitaScreen" options={{ title: 'Agendar Cita' }} component={AgendarCitaScreen} />
       {/* <Drawer.Screen name="Article" component={Article} /> */}
     </Drawer.Navigator>
   );
@@ -26,22 +33,62 @@ export const UserLateralMenu = () => {
 
 
 // todo borrar y cambiar por back image
-const urlImage = 'https://alumni.engineering.utoronto.ca/files/2022/05/Avatar-Placeholder-400x400-1.jpg';
 
 
 const UserMenu = ({ navigation }: DrawerContentComponentProps) => {
+
+  const urlImage = 'https://alumni.engineering.utoronto.ca/files/2022/05/Avatar-Placeholder-400x400-1.jpg';
+
+  const [modal, setModal] = useState(false)
+  const [avatarImage, setAvatarImage] = useState<any>(`${urlImage}`)
+
+  const showModal = async () => {
+    setModal(true)
+  }
+
+  const openCamera = async()=>{
+    setModal(false)
+    await launchCamera({mediaType:'photo'},(img)=>{
+      (img.assets)
+      ?
+        setAvatarImage(img.assets![0].uri)
+      :
+        setAvatarImage(avatarImage)
+    })
+  }
+
+  const openGalery = async()=>{
+    setModal(false)
+    await launchImageLibrary({mediaType:'photo'},(img)=>{
+
+      (img.assets)
+      ?
+      setAvatarImage(img.assets![0].uri)
+      :
+      setAvatarImage(avatarImage)
+    })
+    
+
+    
+  }
+  
+  const closeModal = ()=>{
+    setModal(false)
+  }
+  
   return (
     <>
       <DrawerContentScrollView>
         <View>
           <AvatarMenu
-            urlImage={urlImage}
+            urlImage={avatarImage}
             userName="Nombre del usuario"
-            imageContentStyle="items-center mt-5 border-2 rounded-full "
+            imageContentStyle="items-center mt-5 border-2 border-slate-600 rounded-full "
             imageStyle="w-28 h-28 rounded-full  "
             textContentStyle="my-5 "
-            textStyle="text-3xl font-bold text-center"
+            textStyle="text-3xl font-bold text-center text-white"
             componentStyle="items-center bg-slate-500 -top-1"
+            changeAvatar={showModal}
           />
         </View>
         <View >
@@ -65,6 +112,7 @@ const UserMenu = ({ navigation }: DrawerContentComponentProps) => {
             optionContentStyle=" w-full "
             iconColor=''
             iconSize={25}
+            navigation={() => navigation.navigate('AgendarCitaScreen')}
           />
           <MenuOption
             componentStyle=" my-2 h-12 flex-row items-center mx-5 "
@@ -86,6 +134,7 @@ const UserMenu = ({ navigation }: DrawerContentComponentProps) => {
             optionContentStyle=" w-full "
             iconColor=''
             iconSize={25}
+            navigation={() => navigation.navigate('Home')}
           />
           <MenuOption
             componentStyle=" my-2 h-12 flex-row items-center mx-5 "
@@ -96,7 +145,7 @@ const UserMenu = ({ navigation }: DrawerContentComponentProps) => {
             optionContentStyle=" w-full "
             iconColor=''
             iconSize={25}
-            navigation={() => navigation.navigate('UserHomeScreen')}
+            navigation={() => navigation.navigate('Home')}
           />
         </View>
       </DrawerContentScrollView>
@@ -104,23 +153,26 @@ const UserMenu = ({ navigation }: DrawerContentComponentProps) => {
       <Logout
         touchableStyle="h-12 "
         containerStyle="h-full justify-end items-center flex-row mx-5 "
-        iconColor=""
+        iconColor="red"
         iconName="exit-outline"
         iconSize={25}
-        textStyle='text-xl font-semibold'
+        textStyle='text-xl font-semibold text-red-500'
+        onPress={() => navigation.navigate('LoginScreen')}
+
       />
-
-      {/* <TouchableOpacity className="h-12 bg-red-600">
-        <View className="  h-full justify-end items-center flex-row mx-5 ">
-          <View >
-            <Text className="text-lg "> Cerrar Sesion </Text>
+      <View>
+        <Modal 
+          isVisible={modal} 
+          animationOut={'fadeOutDownBig'}
+          className=' w-full m-0' 
+        >
+          <View className=' flex-1 h-[235px] w-full bg-slate-600 absolute bottom-0 rounded-t-3xl'>
+            <ModallateralMenu iconName='camera-outline' buttonText='Tomar Foto' action={openCamera}/>
+            <ModallateralMenu iconName='image-outline' buttonText='Escoger de la Galeria' action={openGalery} />
+            <ModallateralMenu  buttonText='Cancelar' action={closeModal} />
           </View>
-          <View>
-            <Text className="text-lg ">  h1 </Text>
-          </View>
-        </View>
-      </TouchableOpacity> */}
-
+        </Modal>
+      </View>
     </>
   );
 };

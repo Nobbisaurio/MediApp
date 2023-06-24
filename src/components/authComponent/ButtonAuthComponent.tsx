@@ -6,11 +6,12 @@ interface ButtonProps{
     touchableStyle:string
     buttonName:string
     navigation?:()=>void
+    onPress:()=>void
 }
 
-const ButtonAuthComponent = ({textStyle,touchableStyle,buttonName,navigation}:ButtonProps) => {
+const ButtonAuthComponent = ({textStyle,touchableStyle,buttonName,navigation,onPress}:ButtonProps) => {
   return (
-    <TouchableOpacity className={`${touchableStyle}`} onPress={navigation}>
+    <TouchableOpacity className={`${touchableStyle}`} onPress={onPress}>
         <Text className={`${textStyle}`}>{buttonName}</Text>
     </TouchableOpacity>
   );

@@ -10,11 +10,12 @@ interface LogoutProps{
     iconSize:number
     iconColor:string
     textStyle:string
+    onPress: ()=>void
 }
 
-const Logout = ({touchableStyle,containerStyle,iconName,iconSize,iconColor,textStyle}:LogoutProps) => {
+const Logout = ({touchableStyle,containerStyle,iconName,iconSize,iconColor,textStyle, onPress}:LogoutProps) => {
   return (
-    <TouchableOpacity className={touchableStyle}>
+    <TouchableOpacity className={touchableStyle} onPress={onPress}>
         <View className={containerStyle}>
           <View >
             <Text className={textStyle}> Cerrar Sesion </Text>

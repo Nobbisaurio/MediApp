@@ -13,9 +13,12 @@ interface InputProps{
   icon:IconProops
   showPassword?: () => void
   hidePassword?:boolean
+  onChangeText?:(value:string)=>void
+  value?:string
+  onSubmitionEditing?:()=>void
 }
 
-const InputAuthComponent = ({placeholder,showPassword,hidePassword,icon:{color,firstIcon,size, secondIcon}}:InputProps) => {
+const InputAuthComponent = ({placeholder,showPassword,hidePassword,icon:{color,firstIcon,size, secondIcon},onChangeText,value, onSubmitionEditing}:InputProps) => {
   return (
 
     <>
@@ -28,7 +31,14 @@ const InputAuthComponent = ({placeholder,showPassword,hidePassword,icon:{color,f
                   <Icon name={firstIcon} size={size} color={color} />
               </View>
               <View className="w-9/12 border-l-2 border-slate-200">
-                  <TextInput className="border-none rounded-r-xl bg-white pl-5 w-full" placeholder={placeholder}/>
+                  <TextInput className="border-none rounded-r-xl bg-white pl-5 w-full" 
+                    placeholder={placeholder}
+                    onChangeText={ onChangeText}
+                    value={value}
+                    onSubmitEditing={onSubmitionEditing}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
               </View>
           </View>
         )
@@ -39,7 +49,15 @@ const InputAuthComponent = ({placeholder,showPassword,hidePassword,icon:{color,f
                 <Icon name={firstIcon} size={size} color={color}/>
             </View>
             <View className="w-7/12 border-l-2 border-slate-200">
-                <TextInput className="border-none  bg-white pl-5 w-full" placeholder={placeholder} secureTextEntry = {hidePassword}  />
+                <TextInput className="border-none  bg-white pl-5 w-full"
+                  placeholder={placeholder}
+                  secureTextEntry = {hidePassword}
+                  onChangeText={ onChangeText}
+                  value={value}
+                  onSubmitEditing={onSubmitionEditing}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
             </View>
             <TouchableOpacity className="bg-white h-12 w-2/12 items-center justify-center rounded-r-xl" onPress={showPassword}>
                 <Icon name={secondIcon} size={size}  />
