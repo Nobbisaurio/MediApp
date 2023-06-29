@@ -4,14 +4,26 @@ import { NavigationContainer } from '@react-navigation/native';
 // import LoginScreen from './src/screens/auth/LoginScreen';
 // import RegisterScreen from './src/screens/auth/RegisterScreen';
 import { AuthNavigation } from './src/navigation/auth/AuthNavigation';
+import { AuthProvider } from './src/context/authContext';
+
+
+const AppState = ({ children }: any) => {
+
+  return (
+    <AuthProvider>
+      {children}
+    </AuthProvider>
+  )
+}
+
+
 
 const App = () => {
   return (
     <NavigationContainer>
-
-      {/* <LoginScreen /> */}
-      {/* <RegisterScreen/> */}
-      <AuthNavigation />
+      <AppState>
+        <AuthNavigation />
+      </AppState>
     </NavigationContainer>
   );
 };

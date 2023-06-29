@@ -1,6 +1,6 @@
 //native Imports
-import React from 'react';
-import { View } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, Text, Alert } from 'react-native';
 //hooks
 import usePassword from '../../hooks/usePassword';
 //Components
@@ -11,7 +11,8 @@ import ButtonAuthComponent from '../../components/authComponent/ButtonAuthCompon
 import { StackScreenProps } from '@react-navigation/stack';
 import { useForm } from '../../hooks/useForm';
 import { ScrollView } from 'react-native-gesture-handler';
-import { LogIn } from '../../services/authServices';
+import { AuthContext } from '../../context/authContext';
+import { Keyboard } from 'react-native';
 
 
 
@@ -22,17 +23,36 @@ interface Props extends StackScreenProps<any, any> { }
 
 const LoginScreen = ({ navigation }: Props) => {
 
+
+  const { singIn, errMessage,removeError } = useContext(AuthContext)
+
   const { hidePassword, showPassword, hidePasswordIcon } = usePassword();
   const { email, password, onChange } = useForm({
     email: '',
     password: '',
   });
 
+  useEffect(() => {
+    if (errMessage.length === 0) return;
+
+    Alert.alert('Login Error:',errMessage.toString().split(",").join('. \n'),[{
+        text: 'vale',
+        onPress:removeError
+      }]
+      );
+  }, [errMessage])
+
+
+
+
+
 
   const onLogin = async () => {
-    console.log({ password, email })
-   console.log(LogIn({email,password}))
+    Keyboard.dismiss();
+    singIn({ email, password })
   };
+
+
 
   return (
 
@@ -76,7 +96,7 @@ const LoginScreen = ({ navigation }: Props) => {
             buttonName="Crear una cuenta"
             textStyle="text-blue-700 underline mt-5"
             touchableStyle=""
-            onPress={() => navigation.navigate('RegisterScreen')}
+            onPress={() => navigation.replace('RegisterScreen')}
           />
         </View>
       </View>

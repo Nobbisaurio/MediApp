@@ -1,10 +1,6 @@
-import axios from 'axios'
 import { User } from '../interfaces/Credentials.Interface';
+import { apiClient } from '../api/ApiMed';
 
-
-const apiClient = axios.create({
-  baseURL: 'http://localhost:3000/api/v1',
-})
 
 
 // async  LogIn(credentials: Pick<User, 'email' | 'password'>) {
@@ -13,18 +9,26 @@ const apiClient = axios.create({
 // }
 
 
-const LogIn = async (credentials: Pick<User, 'email' | 'password'>) => {
+const LogIn = async (credentials: Pick<User, 'email' | 'password'>): Promise<User> => {
 
-  try {
-    const res = await apiClient.post('/auth/login', credentials)
-    return res
-  } catch (error) {
-    console.log(error)
-  }
+  const res = await apiClient.post('/auth/login', credentials)
+  return res.data
+
+
+}
+
+
+
+const getUsers = async () => {
+
+  const res = await apiClient.get('/user');
+  return res.data
+
 }
 
 export {
-  LogIn
+  LogIn,
+  getUsers
 }
 
 

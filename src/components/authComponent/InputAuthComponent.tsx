@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextInput, TouchableOpacity, View } from 'react-native';
+import { TextInput, TouchableOpacity, View,Text} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 interface IconProops {
@@ -11,10 +11,11 @@ interface IconProops {
 interface InputProps{
   placeholder:string
   icon:IconProops
-  showPassword?: () => void
   hidePassword?:boolean
-  onChangeText?:(value:string)=>void
   value?:string
+  error?:string
+  showPassword?: () => void
+  onChangeText?:(value:string)=>void
   onSubmitionEditing?:()=>void
 }
 
@@ -31,14 +32,14 @@ const InputAuthComponent = ({placeholder,showPassword,hidePassword,icon:{color,f
                   <Icon name={firstIcon} size={size} color={color} />
               </View>
               <View className="w-9/12 border-l-2 border-slate-200">
-                  <TextInput className="border-none rounded-r-xl bg-white pl-5 w-full" 
+                  <TextInput className="border-none rounded-r-xl bg-white pl-5 w-full"
                     placeholder={placeholder}
                     onChangeText={ onChangeText}
                     value={value}
                     onSubmitEditing={onSubmitionEditing}
                     autoCapitalize="none"
                     autoCorrect={false}
-                  />
+                    />
               </View>
           </View>
         )
