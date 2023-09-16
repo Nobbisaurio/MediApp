@@ -12,14 +12,16 @@ interface InputProps{
   placeholder:string
   icon:IconProops
   hidePassword?:boolean
+  autoCapitalize?:"none" | "sentences" | "words" | "characters" | undefined
   value?:string
   error?:string
+
   showPassword?: () => void
   onChangeText?:(value:string)=>void
   onSubmitionEditing?:()=>void
 }
 
-const InputAuthComponent = ({placeholder,showPassword,hidePassword,icon:{color,firstIcon,size, secondIcon},onChangeText,value, onSubmitionEditing}:InputProps) => {
+const InputAuthComponent = ({placeholder,showPassword,hidePassword,icon:{color,firstIcon,size, secondIcon},onChangeText,value, onSubmitionEditing, autoCapitalize}:InputProps) => {
   return (
 
     <>
@@ -37,7 +39,7 @@ const InputAuthComponent = ({placeholder,showPassword,hidePassword,icon:{color,f
                     onChangeText={ onChangeText}
                     value={value}
                     onSubmitEditing={onSubmitionEditing}
-                    autoCapitalize="none"
+                    autoCapitalize={autoCapitalize}
                     autoCorrect={false}
                     />
               </View>

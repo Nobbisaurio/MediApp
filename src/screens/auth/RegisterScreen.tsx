@@ -47,7 +47,7 @@ const RegisterScreen = ({ navigation }: Props) => {
   const onRegister = () => {
     Keyboard.dismiss();
     if(!checkPassword()) return
-    singUp({ firstname, email, password })
+    singUp({email,password,firstname})
   };
   const checkPassword = () => {
     if (password !== password2) {
@@ -62,7 +62,6 @@ const RegisterScreen = ({ navigation }: Props) => {
 
     <ScrollView className='flex-1 bg-slate-200 '>
 
-      {/* // <View className="flex-1 bg-slate-200 justify-center items-center"> */}
 
       <View className="h-5/6 w-full mt-8">
 
@@ -75,17 +74,20 @@ const RegisterScreen = ({ navigation }: Props) => {
             placeholder="Nombre"
             onChangeText={(value) => onChange(value, 'firstname')}
             value={firstname}
+            autoCapitalize="words"
             onSubmitionEditing={onRegister}
           />
           <InputAuthComponent
             icon={{ color: '#999999', firstIcon: 'person-outline', size: 15 }}
             placeholder="Apellido"
+            autoCapitalize="words"
             onChangeText={(value) => onChange(value, 'lastname')}
             value={lastname}
           />
           <InputAuthComponent
             icon={{ color: '#999999', firstIcon: 'at-outline', size: 15 }}
             placeholder="Correo"
+            autoCapitalize="none"
             onChangeText={(value) => onChange(value, 'email')}
             value={email}
             onSubmitionEditing={onRegister}
@@ -94,6 +96,7 @@ const RegisterScreen = ({ navigation }: Props) => {
           <InputAuthComponent
             icon={{ color: '#999999', firstIcon: 'lock-closed-outline', size: 15, secondIcon: `${hidePasswordIcon}` }}
             placeholder="Contraseña"
+            autoCapitalize="none"
             hidePassword={hidePassword}
             showPassword={showPassword}
             onChangeText={(value) => onChange(value, 'password')}
@@ -103,6 +106,7 @@ const RegisterScreen = ({ navigation }: Props) => {
           <InputAuthComponent
             icon={{ color: '#999999', firstIcon: 'checkmark-done-outline', size: 15, secondIcon: `${hideReafirmPasswordIcon}` }}
             placeholder="Confirmar contraseña"
+            autoCapitalize="none"
             hidePassword={hideReafirmPassword}
             showPassword={showReafirmPassword}
             onChangeText={(value) => onChange(value, 'password2')}

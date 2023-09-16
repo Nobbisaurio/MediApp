@@ -67,6 +67,7 @@ const LoginScreen = ({ navigation }: Props) => {
           <InputAuthComponent
             icon={{ color: '#999999', firstIcon: 'at-outline', size: 15 }}
             placeholder="Correo"
+            autoCapitalize='none'
             onChangeText={(value) => onChange(value, 'email')}
             value={email}
             onSubmitionEditing={onLogin}
@@ -87,7 +88,6 @@ const LoginScreen = ({ navigation }: Props) => {
             buttonName="Iniciar Sesion"
             textStyle="text-white"
             touchableStyle="border-2 border-blue-600 w-10/12 h-10 rounded-xl items-center justify-center bg-blue-500"
-            // navigation={()=>navigation.replace('UserLateralMenu')}
             onPress={onLogin}
           />
         </View>

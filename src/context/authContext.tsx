@@ -74,9 +74,9 @@ export const AuthProvider = ({ children }: any) => {
       })
     }
   }
-  const singUp = async ({ email, firstname, password }: RegisterCredentials) => {
+  const singUp = async ({ email, firstname, password}: RegisterCredentials) => {
     try {
-      const { data } = await apiClient.post('/auth/register', { email, firstname, password })
+      const { data } = await apiClient.post('/auth/register', { email, firstname,password })
       dispatch({
         type: 'singUp',
         payload: {
@@ -91,10 +91,15 @@ export const AuthProvider = ({ children }: any) => {
     }
   }
   const logOut = async () => {
-    await AsyncStorage.removeItem('token');
-    dispatch({
-      type:'logOut'
-    })
+    try {
+      await AsyncStorage.removeItem('token');
+      dispatch({
+        type: 'logOut'
+      })
+    } catch (error:any) {
+      console.log(error.response.data)
+    }
+
   }
 
   const removeError = () => {

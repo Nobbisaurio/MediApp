@@ -1,56 +1,138 @@
-import React, { useContext } from 'react';
-import { View, Text, Image } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, Image, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import FabButton from '../../components/home/FabButton';
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthContext } from '../../context/authContext';
+import apiClient from '../../api/ApiMed';
+import UserCards from '../../components/home/UserCards';
+import Cards from '../../components/home/Cards';
 // import UserCards from '../../components/home/userCards';
 
 interface Props extends StackScreenProps<any, any> { }
 
 const UserHomeScreen = ({ navigation }: Props) => {
-  const img = 'https://static.wikia.nocookie.net/marvelcinematicuniverse/images/4/41/Stephen-Strange_-_Heroe.png/revision/latest?cb=20220703025553&path-prefix=es'
+  const img = 'https://thumbs.dreamstime.com/b/default-placeholder-doctor-half-length-portrait-photo-avatar-gray-color-114321029.jpg'
   const uri = 'https://images.emojiterra.com/google/android-pie/512px/2695.png'
   const { user } = useContext(AuthContext)
+
+  const [medicsArr, setMedicArr] = useState<any[]>([])
+  const [citasArr, setCitasArr] = useState<any[]>([])
+
+  useEffect(() => {
+    getMedic().then(res => {
+      const medics: any[] = [];
+      (res.data as any[]).forEach(medic => {
+        medics.push(medic)
+      })
+      return setMedicArr(medics)
+    }).catch(err => console.log(err.response.data))
+
+  }, [medicsArr])
+
+  useEffect(() => {
+
+    getappointment(user?.id!)
+
+  }, [citasArr])
+
+  const getappointment = async (id: string) => {
+    const res = await apiClient.get(`user/${id}`).then(res => {
+      setCitasArr(res.data.appointment)
+
+    })
+
+  }
+
+  const editAppointment = async (id: number, data: object) => {
+    const res = await apiClient.patch(`/appointment/${id}`, data)
+  }
+
+  const onAsist = (id: number, data: object) => {
+    Alert.alert('Informacion', 'Estas Seguro que asistio a la cita', [{
+      text: 'Cancelar',
+      style: 'cancel'
+    },
+    {
+      text: 'Aceptar',
+      onPress: () => {
+        data = {
+          status: 'attended'
+        }
+        editAppointment(id,data)
+      }
+    }])
+  }
+  const onNoAsist = (id: number, data: object) => {
+    Alert.alert('Informacion', 'Estas Seguro que no asistio a la cita', [{
+      text: 'Cancelar',
+      style: 'cancel'
+    },
+    {
+      text: 'Aceptar',
+      onPress: () => {
+        data = {
+          status: 'lost'
+        }
+        editAppointment(id,data)
+      }
+    }])
+  }
+
+
+
+
+
+  const getMedic = async () => {
+    const res = await apiClient.get('/user/medic/get')
+    return res
+  }
+
+
+  const deleteMedic = async (id: string) => {
+    Alert.alert('Eliminar Personal', 'Estas seguro que quieres eliminar al personal', [
+      {
+        text: 'Cancelar',
+        style: 'cancel'
+      },
+      {
+        text: 'Eliminar',
+        onPress: async () => {
+          try {
+            const res = await apiClient.delete(`user/medic/delete/${id}`)
+          } catch (error: any) {
+
+          }
+        }
+      }
+    ])
+  }
+
+
+  const updatemedic = async () => {
+    navigation.navigate('AgendarCitaScreen')
+  }
 
   return (
 
     <>
-      {
-        // console.log(user)
-      }
 
       {
         (user?.role?.name === 'pacient') && (
           <>
-            <ScrollView >
-              <View className="bg-slate-200 flex-1 items-center  ">
-
-                <Text className="self-start mt-5 text-2xl font-bold ml-5 text-slate-600 ">Tus Citas</Text>
-                <View className="bg-white w-4/6 my-3 rounded-md p-5">
-                  <Text className="text-xl py-1" >Fecha: 27/01/2022</Text>
-                  <Text className="text-xl py-1" >Hora: 8:00 am</Text>
-                  <Text className="text-xl py-1" >Especialidad: Odontologia</Text>
-                  <Text className="text-xl py-1" >Doctor: Benito Camelo</Text>
-                </View>
-                <View className="bg-white w-4/6 my-3 rounded-md p-5">
-                  <Text className="text-xl py-1" >Fecha: 27/01/2022</Text>
-                  <Text className="text-xl py-1" >Hora: 8:00 am</Text>
-                  <Text className="text-xl py-1" >Especialidad: Odontologia</Text>
-                  <Text className="text-xl py-1" >Doctor: Benito Camelo</Text>
-                </View>
-                <View className="bg-white w-4/6 my-3 rounded-md p-5">
-                  <Text className="text-xl py-1" >Fecha: 27/01/2022</Text>
-                  <Text className="text-xl py-1" >Hora: 8:00 am</Text>
-                  <Text className="text-xl py-1" >Especialidad: Odontologia</Text>
-                  <Text className="text-xl py-1" >Doctor: Benito Camelo</Text>
-                </View>
-                <View className="bg-white w-4/6 my-3 rounded-md p-5">
-                  <Text className="text-xl py-1" >Fecha: 27/01/2022</Text>
-                  <Text className="text-xl py-1" >Hora: 8:00 am</Text>
-                  <Text className="text-xl py-1" >Especialidad: Odontologia</Text>
-                  <Text className="text-xl py-1" >Doctor: Benito Camelo</Text>
-                </View>
+            <ScrollView className='bg-slate-200 flex-1'>
+              <View className=" items-center ">
+                {
+                  citasArr.filter(cita => cita.status === 'pending').map(cita => (
+                    <Cards
+                      key={cita.id}
+                      id={cita.id}
+                      fecha={new Date(cita.date).toDateString()}
+                      hora={cita.hour.toString()}
+                      estado={cita.status}
+                    />
+                  ))
+                }
               </View>
             </ScrollView>
             <FabButton
@@ -66,173 +148,50 @@ const UserHomeScreen = ({ navigation }: Props) => {
         (user?.role?.name === 'admin') && (
           <>
             <ScrollView className='bg-slate-200'>
-              <View className='flex-1 items-center'>
-                <View className='bg-white w-5/6 h-[210] my-3 rounded-md p-5'>
-                  <View className='flex-1 flex-row flex-wrap'>
-                    <View className=''>
-                      <Text className='uppercase text-center font-bold'>{`medic \n institution`}</Text>
-                    </View>
-                    <View className='ml-2 justify-center'>
-                      <Image source={{uri,height:34,width:34}} />
-                    </View>
-                    <View className='justify-center ml-3'>
-                      <Text className='font-bold'>Informacion del Medico</Text>
-                    </View>
-                    <View className='items-center w-[80] '>
-                      <Image source={{uri:img,width:80,height:110}}/>
-                    </View>
-                    <View className='p-2 ml-3'>
-                      <Text className='font-bold uppercase'>Nombre:</Text>
-                      <Text className=' uppercase'>Dr. Strange</Text>
-                    </View>
-                    <View className='p-2 ml-3 absolute left-[80] top-[70]'>
-                      <Text className='font-bold uppercase'>Especialidad:</Text>
-                      <Text className=' uppercase'>Urologo</Text>
-                    </View>
-                    <View className='p-2 ml-3 absolute left-[80] top-[105]'>
-                      <Text className='font-bold uppercase'>Especialidad:</Text>
-                      <Text className=' uppercase'>Urologo</Text>
-                    </View>
-                    <View className='mt-2  absolute left-[0] top-[150]'>
-                      <Text className='font-bold uppercase'>NUI: 1728548544</Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-              <View className='flex-1 items-center'>
-                <View className='bg-white w-5/6 h-[210] my-3 rounded-md p-5'>
-                  <View className='flex-1 flex-row flex-wrap'>
-                    <View className=''>
-                      <Text className='uppercase text-center font-bold'>{`medic \n institution`}</Text>
-                    </View>
-                    <View className='ml-2 justify-center'>
-                      <Image source={{uri,height:34,width:34}} />
-                    </View>
-                    <View className='justify-center ml-3'>
-                      <Text className='font-bold'>Informacion del Medico</Text>
-                    </View>
-                    <View className='items-center w-[80] '>
-                      <Image source={{uri:img,width:80,height:110}}/>
-                    </View>
-                    <View className='p-2 ml-3'>
-                      <Text className='font-bold uppercase'>Nombre:</Text>
-                      <Text className=' uppercase'>Dr. Strange</Text>
-                    </View>
-                    <View className='p-2 ml-3 absolute left-[80] top-[70]'>
-                      <Text className='font-bold uppercase'>Especialidad:</Text>
-                      <Text className=' uppercase'>Urologo</Text>
-                    </View>
-                    <View className='p-2 ml-3 absolute left-[80] top-[105]'>
-                      <Text className='font-bold uppercase'>Especialidad:</Text>
-                      <Text className=' uppercase'>Urologo</Text>
-                    </View>
-                    <View className='mt-2  absolute left-[0] top-[150]'>
-                      <Text className='font-bold uppercase'>NUI: 1728548544</Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-              <View className='flex-1 items-center'>
-                <View className='bg-white w-5/6 h-[210] my-3 rounded-md p-5'>
-                  <View className='flex-1 flex-row flex-wrap'>
-                    <View className=''>
-                      <Text className='uppercase text-center font-bold'>{`medic \n institution`}</Text>
-                    </View>
-                    <View className='ml-2 justify-center'>
-                      <Image source={{uri,height:34,width:34}} />
-                    </View>
-                    <View className='justify-center ml-3'>
-                      <Text className='font-bold'>Informacion del Medico</Text>
-                    </View>
-                    <View className='items-center w-[80] '>
-                      <Image source={{uri:img,width:80,height:110}}/>
-                    </View>
-                    <View className='p-2 ml-3'>
-                      <Text className='font-bold uppercase'>Nombre:</Text>
-                      <Text className=' uppercase'>Dr. Strange</Text>
-                    </View>
-                    <View className='p-2 ml-3 absolute left-[80] top-[70]'>
-                      <Text className='font-bold uppercase'>Especialidad:</Text>
-                      <Text className=' uppercase'>Urologo</Text>
-                    </View>
-                    <View className='p-2 ml-3 absolute left-[80] top-[105]'>
-                      <Text className='font-bold uppercase'>Especialidad:</Text>
-                      <Text className=' uppercase'>Urologo</Text>
-                    </View>
-                    <View className='mt-2  absolute left-[0] top-[150]'>
-                      <Text className='font-bold uppercase'>NUI: 1728548544</Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-              <View className='flex-1 items-center'>
-                <View className='bg-white w-5/6 h-[210] my-3 rounded-md p-5'>
-                  <View className='flex-1 flex-row flex-wrap'>
-                    <View className=''>
-                      <Text className='uppercase text-center font-bold'>{`medic \n institution`}</Text>
-                    </View>
-                    <View className='ml-2 justify-center'>
-                      <Image source={{uri,height:34,width:34}} />
-                    </View>
-                    <View className='justify-center ml-3'>
-                      <Text className='font-bold'>Informacion del Medico</Text>
-                    </View>
-                    <View className='items-center w-[80] '>
-                      <Image source={{uri:img,width:80,height:110}}/>
-                    </View>
-                    <View className='p-2 ml-3'>
-                      <Text className='font-bold uppercase'>Nombre:</Text>
-                      <Text className=' uppercase'>Dr. Strange</Text>
-                    </View>
-                    <View className='p-2 ml-3 absolute left-[80] top-[70]'>
-                      <Text className='font-bold uppercase'>Especialidad:</Text>
-                      <Text className=' uppercase'>Urologo</Text>
-                    </View>
-                    <View className='p-2 ml-3 absolute left-[80] top-[105]'>
-                      <Text className='font-bold uppercase'>Especialidad:</Text>
-                      <Text className=' uppercase'>Urologo</Text>
-                    </View>
-                    <View className='mt-2  absolute left-[0] top-[150]'>
-                      <Text className='font-bold uppercase'>NUI: 1728548544</Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-              <View className='flex-1 items-center'>
-                <View className='bg-white w-5/6 h-[210] my-3 rounded-md p-5'>
-                  <View className='flex-1 flex-row flex-wrap'>
-                    <View className=''>
-                      <Text className='uppercase text-center font-bold'>{`medic \n institution`}</Text>
-                    </View>
-                    <View className='ml-2 justify-center'>
-                      <Image source={{uri,height:34,width:34}} />
-                    </View>
-                    <View className='justify-center ml-3'>
-                      <Text className='font-bold'>Informacion del Medico</Text>
-                    </View>
-                    <View className='items-center w-[80] '>
-                      <Image source={{uri:img,width:80,height:110}}/>
-                    </View>
-                    <View className='p-2 ml-3'>
-                      <Text className='font-bold uppercase'>Nombre:</Text>
-                      <Text className=' uppercase'>Dr. Strange</Text>
-                    </View>
-                    <View className='p-2 ml-3 absolute left-[80] top-[70]'>
-                      <Text className='font-bold uppercase'>Especialidad:</Text>
-                      <Text className=' uppercase'>Urologo</Text>
-                    </View>
-                    <View className='p-2 ml-3 absolute left-[80] top-[105]'>
-                      <Text className='font-bold uppercase'>Especialidad:</Text>
-                      <Text className=' uppercase'>Urologo</Text>
-                    </View>
-                    <View className='mt-2  absolute left-[0] top-[150]'>
-                      <Text className='font-bold uppercase'>NUI: 1728548544</Text>
-                    </View>
-                  </View>
-                </View>
+              {
+                medicsArr.map(medic => (
+                  <UserCards
+                    cedula={medic.profile.idCard}
+                    correo={medic.email}
+                    especialidad={medic.speciality}
+                    img={img}
+                    medicName={medic.firstname.concat(" ", medic.profile.lastname)}
+                    uri={uri}
+                    key={medic.id}
+                    deleteUser={() => deleteMedic(medic.id)}
+                    id={medic.id}
+
+                  />
+                ))
+              }
+
+
+            </ScrollView>
+            <FabButton onPress={() => navigation.navigate('AgendarCitaScreen')} />
+          </>
+        )
+      }
+      {
+
+        (user?.role?.name === 'medic') && (
+          <>
+            <ScrollView className='bg-slate-200 flex-1'>
+              <View className=" items-center ">
+                {
+                  citasArr.filter(cita => cita.status === 'pending').map(cita => (
+                    <Cards
+                      key={cita.id}
+                      id={cita.id}
+                      fecha={cita.date}
+                      hora={cita.hour}
+                      estado={cita.status}
+                      onAsist={() => onAsist(cita.id, cita.status)}
+                      onNoAsist={()=>onNoAsist(cita.id,cita.status)}
+                    />
+                  ))
+                }
               </View>
             </ScrollView>
-            <FabButton onPress={()=>navigation.navigate('AgendarCitaScreen')}/>
           </>
         )
       }

@@ -7,5 +7,6 @@ export interface Credentials {
 export interface RegisterCredentials {
   email: string,
   password: string,
-  firstname: string
+  firstname: string,
+
 }
